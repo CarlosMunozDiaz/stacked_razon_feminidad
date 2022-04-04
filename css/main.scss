@@ -1,0 +1,151 @@
+@import './reset';
+
+* {
+    box-sizing: border-box;
+} 
+body {
+    margin:0;
+    padding:0;
+    font-family: 'Roboto', sans-serif;
+}
+.container {
+    width: 100%;
+    max-width: 768px;
+    margin: auto;
+}
+
+.title {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+.subtitle {
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+/* Leyenda */
+.legend {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+.legend .text {
+    font-size: 14px;
+    color: #4F4F4F;
+    letter-spacing: 1px;
+    font-weight: normal;
+
+    width: 300px;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.legend .legend__gradient {
+    margin: 0px 16px;
+    width: 300px;
+    height: 10px;
+    background-image: linear-gradient(90deg, #00354e 0%, #367390 17.5%, #79b6d5 35%, #f5f5f5 50%, #f0995f 67.5%, #af4e1f 85%, #630900 100%);
+}
+
+.chart {
+    &__legend {
+        display: flex;
+        flex-wrap: wrap;
+
+        &--item {
+            position: relative;
+
+            display: flex;
+            align-items: center;
+
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 10px;  
+            
+            padding-left: 22px;
+            margin-right: 16px;
+            margin-top: 8px;
+
+            //En función de la clase CSS que le acompañe, tendrá un color u otro
+            &::before {
+                position: absolute;
+                content: '';
+                top: 50%;
+                left: 0;
+                transform: translateY(-50%);
+                width: 18px;
+                height: 2.5px;
+            }
+
+            &.primary_1::before { background-color: #F8B05C; }
+            &.primary_2::before { background-color: #E37A42; }
+            &.anag_1::before { background-color: #D1834F; }
+            &.anag_2::before { background-color: #BF2727; }
+            &.comp_1::before { background-color: #528FAD; }
+            &.comp_2::before { background-color: #AADCE0; }
+            &.grey_1::before { background-color: #B5ABA4; }
+            &.grey_2::before { background-color: #64605A; }
+            &.other_1::before { background-color: #B58753; }
+            &.other_2::before { background-color: #731854; }
+        }
+    } 
+}
+
+/* Gráfico */
+#chart {
+    width:100%;
+    max-width: 768px;
+    height: 450px;
+    margin: auto;
+    margin-top: 16px;    
+}
+
+/* Fuente */
+.note {
+    font-size: 14px;
+    margin-top: 12px;
+}
+.source {
+    font-size: 14px;
+    color: #4F4F4F;
+    margin-top: 12px;
+    text-align: right;
+    font-weight: bold;
+}
+
+.chart__tooltip {
+    position: absolute;
+    opacity: 0;   
+
+    top: 0px;
+    left: 0px;
+
+    width: auto;
+    max-width: 135px;
+    height: auto;
+    padding: 8px;
+    background-color: #F4F4F4;
+
+    &--title {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 1.1;
+        color: #000;
+    }
+
+    &--text {
+        font-style: normal;
+        font-weight: 300;
+        font-size: 12px;
+        line-height: 1.1;
+        color: #000;
+
+        margin-top: 4px;
+    }
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="mrf-extractable" content="false">
+    <title>Presencia femenina en España por tamaño de municipios</title>
+    <link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href="./css/main.css" rel="stylesheet">
+</head>
+<body>
+    <section class="container">
+        <h2 class="title">Figura 1. Porcentaje de municipios con mayor, menor e igual presencia femenina en función del tamaño del municipio en 2021 en España</h2>
+        <h3 class="subtitle">Datos en porcentajes (%)</h3>
+        <div class="chart__legend">
+            <span class="chart__legend--item primary_1">Más mujeres</span>
+            <span class="chart__legend--item comp_2">Más hombres</span>
+            <span class="chart__legend--item grey_1">Igual</span>
+        </div>
+        <div id="chart"></div>
+        <div class="note">
+            <span>Puede situar el ratón (o pulsar, en caso de utilizar un dispositivo táctil) encima de cada barra para obtener información adicional.</span>
+        </div>       
+        <div class="source">
+            <span>Fuente: INE</span>
+        </div>
+        <div class="chart__tooltip" id="tooltip"></div>
+    </section>
+    <!-- Script base de D3 -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="./js/main_razon.js"></script>
+</body>
+</html>
