@@ -14,7 +14,7 @@ COLOR_OTHER_2 = '#731854';
 let tooltip = d3.select('#tooltip');
 
 function init() {
-    d3.csv('../data/razon_feminidad_tamano_municipios.csv', function(error,data) {
+    d3.csv('https://raw.githubusercontent.com/CarlosMunozDiaz/stacked_razon_feminidad/main/data/razon_feminidad_tamano_municipios.csv', function(error,data) {
         if (error) throw error;
         
         let margin = {top: 10, right: 10, bottom: 100, left: 30},
