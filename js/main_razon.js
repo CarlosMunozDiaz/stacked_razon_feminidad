@@ -11,6 +11,7 @@ COLOR_GREY_1 = '#B5ABA4',
 COLOR_GREY_2 = '#64605A', 
 COLOR_OTHER_1 = '#B58753', 
 COLOR_OTHER_2 = '#731854';
+let tooltip = d3.select('#tooltip');
 
 function init() {
     d3.csv('../data/razon_feminidad_tamano_municipios.csv', function(error,data) {
@@ -44,6 +45,7 @@ function init() {
                     .attr("dy", ".15em")
                     .attr("transform", "rotate(-45)");
                 });
+                g.call(function(g){g.selectAll('.tick line').remove()});
             }
     
             svg.append("g")
@@ -53,8 +55,15 @@ function init() {
             let y = d3.scaleLinear()
                 .domain([0, 100])
                 .range([ height, 0 ]);
-              svg.append("g")
-                .call(d3.axisLeft(y));
+
+            let yAxis = function(svg){
+                svg.call(d3.axisLeft(y).ticks(5))
+                svg.call(function(g){g.selectAll('.tick line').remove()});
+            } 
+    
+            svg.append("g")
+                .attr('class','yaxis')
+                .call(yAxis);
             
             let color = d3.scaleOrdinal()
                 .domain(tipos)
@@ -74,19 +83,98 @@ function init() {
                 .keys(tipos)
                 (data);
 
-            console.log(stackedData);
-
             svg.append("g")
                 .selectAll("g")
                 .data(stackedData)
-                .enter().append("g")
+                .enter()
+                .append("g")
+                .attr('class', function(d) {
+                    if (d.key == 'igual') {
+                        return 'rect rect-igual'
+                    } else if (d.key == 'mas_mujeres') {
+                        return 'rect mas-mujeres'
+                    } else {
+                        return 'rect mas-hombres'
+                    }
+                })
                 .attr("fill", function(d) { return color(d.key); })
                 .selectAll("rect")
                 .data(function(d) { return d; })
-                .enter().append("rect")
-                    .attr("x", function(d) { console.log(d); return x(d.data.tipo_muni_2); })
+                .enter()
+                .append("rect")                    
+                    .attr("x", function(d) { return x(d.data.tipo_muni_2); })
                     .attr("y", function(d) { return y(d[1]); })
                     .attr("height", function(d) { return y(d[0]) - y(d[1]); })
                     .attr("width",x.bandwidth())
+                    .on('mouseover', function(d,i,e) {
+                        let css = this.parentNode.getAttribute('class').split(' ')[1];
+
+                        //Texto
+                        let html = `<p class="chart__tooltip--title">${d.data.tipo_muni_2}</p>
+                                    <p class="chart__tooltip--text">% de municipios con:</p>
+                                    <p class="chart__tooltip--text">Más mujeres: ${numberWithCommas(d.data['mas_mujeres'].toFixed(2))}</p>
+                                    <p class="chart__tooltip--text">Más hombres: ${numberWithCommas(d.data['mas_hombres'].toFixed(2))}</p>
+                                    <p class="chart__tooltip--text">Igual: ${numberWithCommas(d.data['igual'].toFixed(2))}</p>`;
+
+                        tooltip.html(html);
+
+                        //Posibilidad visualización línea diferente
+                        let bars = svg.selectAll('.rect');
+                        
+                        bars.each(function() {
+                            this.style.opacity = '0.4';
+                            if(this.getAttribute('class').indexOf(`${css}`) != -1) {
+                                this.style.opacity = '1';
+                            }
+                        });
+
+                        //Tooltip
+                        positionTooltip(window.event, tooltip);
+                        getInTooltip(tooltip);
+
+                    })
+                    .on('mouseout', function(d,i,e) {
+                        //Quitamos los estilos de la línea
+                        let bars = svg.selectAll('.rect');
+                        bars.each(function() {
+                            this.style.opacity = '1';
+                        });
+
+                        //Quitamos el tooltip
+                        getOutTooltip(tooltip);
+                    });
     });
+}
+
+/*
+* FUNCIONES TOOLTIP
+*/
+function getInTooltip(tooltip) {
+    tooltip.style('display','block').style('opacity', 1);
+}
+
+function getOutTooltip(tooltip) {
+    tooltip.style('display','none').style('opacity', 0);
+}
+
+function positionTooltip(event, tooltip) {
+    let x = event.pageX;
+    let y = event.pageY;
+
+    //Tamaño    
+    let distanciaAncho = 135;
+
+    //Posición
+    let left = window.innerWidth / 2 > x ? 'left' : 'right';
+    let mobile = window.innerWidth < 525 ? -30 : -15;
+    let horizontalPos = left == 'left' ? 30 : - distanciaAncho + mobile;
+
+    tooltip.style('top', (y - 15) + 'px');
+    tooltip.style('left', (x + horizontalPos) + 'px');
+}
+
+/* Helpers */
+function numberWithCommas(x) {
+    //return x.toString().replace(/\./g, ',').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ".");
+    return x.toString().replace(/\./g, ',');
 }
